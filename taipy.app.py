@@ -16,57 +16,39 @@ st.set_page_config(
 # 2. AUTO-REFRESH (Cada 10 minutos)
 st_autorefresh(interval=600000, key="datarefresh")
 
-# 3. CSS "HARD" (CORREGIDO: unsafe_allow_html habilitado)
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
-    
-    [data-testid="stHeader"], header {
-        display: none !important;
-        height: 0px !important;
-    }
-    
-    .stApp {
-        margin-top: -90px !important;
-    }
-
-    .main .block-container {
-        padding-top: 0px !important;
-        padding-bottom: 0px !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        max-width: 100%;
-    }
-
-    html, body, .main { 
-        font-family: 'Roboto', sans-serif; 
-        overflow: hidden; 
-        background-color: #0E1117;
-    }
-
-    .header-container {
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center;
-        padding: 10px 5px;
-        background-color: #0E1117; 
-        border-bottom: 2px solid #444;
-        height: 8vh;
-        margin-bottom: 10px;
-    }
-    .stHorizontalBlock{
-            margin:10px 0px;
-            }
-    
-    .title-main { font-size: 1.4rem; font-weight: bold; margin: 0; color: #2b5dda; }
-    .subtitle-sub { font-size: 0.8rem; color: #ffffff; margin: 0; }
-    .update-text { font-size: 0.7rem; color: #FFBB4D; text-align: right; line-height: 1.1; }
-    
-    [data-testid="stVerticalBlock"] {
-        gap: 0rem !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# 3. CSS "HARD" (Limpiado de indentaciones peligrosas)
+st.markdown("""<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+[data-testid="stHeader"], header { display: none !important; height: 0px !important; }
+.stApp { margin-top: -90px !important; }
+.main .block-container {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    max-width: 100%;
+}
+html, body, .main { 
+    font-family: 'Roboto', sans-serif; 
+    overflow: hidden; 
+    background-color: #0E1117;
+}
+.header-container {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    padding: 10px 5px;
+    background-color: #0E1117; 
+    border-bottom: 2px solid #444;
+    height: 8vh;
+    margin-bottom: 10px;
+}
+.stHorizontalBlock{ margin:10px 0px; }
+.title-main { font-size: 1.4rem; font-weight: bold; margin: 0; color: #2b5dda; }
+.subtitle-sub { font-size: 0.8rem; color: #ffffff; margin: 0; }
+.update-text { font-size: 0.7rem; color: #FFBB4D; text-align: right; line-height: 1.1; }
+[data-testid="stVerticalBlock"] { gap: 0rem !important; }
+</style>""", unsafe_allow_html=True)
 
 # 4. FUNCIONES Y ENCABEZADO
 def get_base64(bin_file):
@@ -78,19 +60,10 @@ ahora = datetime.now().strftime("%d/%m/%Y %I:%M %p")
 logo_path = Path("assets/logo.png")
 logo_html = f'<img src="data:image/png;base64,{get_base64(logo_path)}" style="height:5vh;">' if logo_path.exists() else ''
 
-# ENCABEZADO (CORREGIDO: unsafe_allow_html habilitado)
-st.markdown(f"""
-    <div class="header-container">
-        <div style="display: flex; align-items: center; gap: 20px;">
-            {logo_html}
-            <div>
-                <p class="title-main">Unidad Administrativa Integral de Riesgo</p>
-                <p class="subtitle-sub">Indicadores Macroeconómicos BCV.</p>
-            </div>
-        </div>
-        <div class="update-text">Última actualización:<br><b>{ahora}</b></div>
-    </div>
-    """, unsafe_allow_html=True)
+# ENCABEZADO: Se eliminan espacios al inicio del string para evitar que se interprete como código
+header_code = f"""<div class="header-container"><div style="display: flex; align-items: center; gap: 20px;">{logo_html}<div><p class="title-main">Unidad Administrativa Integral de Riesgo</p><p class="subtitle-sub">Indicadores Macroeconómicos BCV.</p></div></div><div class="update-text">Última actualización:<br><b>{ahora}</b></div></div>"""
+
+st.markdown(header_code, unsafe_allow_html=True)
 
 # --- ALTURAS ---
 alt_sup = 380
@@ -135,11 +108,7 @@ with col_inf_2:
         df4 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Base Monetaria', usecols="A,B,C")
         df4['Fecha_DT'] = pd.to_datetime(df4.iloc[:, 0])
         hoy = datetime.now()
-        df_f4 = df4[(df4['Fecha_DT'].dt.month == hoy.month) & (df4['Fecha_DT'].dt.year == hoy.year)]
-        if df_f4.empty:
-            m, a = (hoy.month-1, hoy.year) if hoy.month > 1 else (12, hoy.year-1)
-            df_f4 = df4[(df4['Fecha_DT'].dt.month == m) & (df4['Fecha_DT'].dt.year == a)]
-        df_f4 = df_f4.sort_values('Fecha_DT')
+        df_f4 = df4[(df4['Fecha_DT'].dt.month == hoy.month) & (df4['Fecha_DT'].dt.year == hoy.year)].sort_values('Fecha_DT')
         fechas4 = [d.strftime('%d/%m/%Y') for d in df_f4['Fecha_DT']]
         montos4, var4 = df_f4.iloc[:, 1] / 1000000, df_f4.iloc[:, 2]
         fig4 = go.Figure()
@@ -154,12 +123,7 @@ with col_inf_3:
     try:
         df5 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Liquidez Monetaria', usecols="A,G,H")
         df5['Fecha_DT'] = pd.to_datetime(df5.iloc[:, 0])
-        hoy = datetime.now()
-        df_f5 = df5[(df5['Fecha_DT'].dt.month == hoy.month) & (df5['Fecha_DT'].dt.year == hoy.year)]
-        if df_f5.empty:
-            m, a = (hoy.month-1, hoy.year) if hoy.month > 1 else (12, hoy.year-1)
-            df_f5 = df5[(df5['Fecha_DT'].dt.month == m) & (df5['Fecha_DT'].dt.year == a)]
-        df_f5 = df_f5.sort_values('Fecha_DT')
+        df_f5 = df5.tail(5).sort_values('Fecha_DT')
         fechas5 = [d.strftime('%d/%m/%Y') for d in df_f5['Fecha_DT']]
         montos5, var5 = df_f5.iloc[:, 1] / 1000000, df_f5.iloc[:, 2]
         fig5 = go.Figure()
@@ -174,12 +138,7 @@ with col_inf_4:
     try:
         df6 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Resev. Internacionales $', usecols="A,D,E")
         df6['Fecha_DT'] = pd.to_datetime(df6.iloc[:, 0])
-        hoy = datetime.now()
-        df_f6 = df6[(df6['Fecha_DT'].dt.month == hoy.month) & (df6['Fecha_DT'].dt.year == hoy.year)]
-        if df_f6.empty:
-            m, a = (hoy.month-1, hoy.year) if hoy.month > 1 else (12, hoy.year-1)
-            df_f6 = df6[(df6['Fecha_DT'].dt.month == m) & (df6['Fecha_DT'].dt.year == a)]
-        df_f6 = df_f6.sort_values('Fecha_DT')
+        df_f6 = df6.tail(5).sort_values('Fecha_DT')
         fechas6 = [d.strftime('%d/%m/%Y') for d in df_f6['Fecha_DT']]
         montos6, var6 = df_f6.iloc[:, 1], df_f6.iloc[:, 2]
         fig6 = go.Figure()
