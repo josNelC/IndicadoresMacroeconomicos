@@ -58,6 +58,10 @@ st.markdown("""
         border-bottom: 2px solid #444;
         height: 8vh;
         margin-bottom: 10px;
+
+        pointer-events: none; /* Esto evita que el navegador intente "inspeccionar" o resaltar el cuadro al pasar el mouse */
+        user-select: none;    /* Evita que se seleccione el texto accidentalmente */
+
     }
     .stHorizontalBlock{
             margin:10px 0px;
