@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 # 2. AUTO-REFRESH (Cada 10 minutos)
-st_autorefresh(interval=600000, key="datarefresh")
+st_autorefresh(interval=8500, key="datarefresh")
 
 # 3. CSS "HARD" (Ajustado para forzar fondo negro en TVs)
 st.markdown("""<style>
@@ -78,8 +78,8 @@ header_code = f"""<div class="header-container"><div style="display: flex; align
 st.markdown(header_code, unsafe_allow_html=True)
 
 # --- ALTURAS ---
-alt_sup = 380
-alt_inf = 260
+alt_sup = 370
+alt_inf = 290
 
 # --- FILA SUPERIOR ---
 col_sup_izq, col_sup_der = st.columns(2)
