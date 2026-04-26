@@ -16,11 +16,27 @@ st.set_page_config(
 # 2. AUTO-REFRESH (Cada 10 minutos)
 st_autorefresh(interval=600000, key="datarefresh")
 
-# 3. CSS "HARD" (Limpiado de indentaciones peligrosas)
+# 3. CSS "HARD" (Ajustado para forzar fondo negro en TVs)
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
-[data-testid="stHeader"], header { display: none !important; height: 0px !important; }
+
+/* Forzar fondo negro en todos los contenedores posibles */
+html, body, [data-testid="stAppViewContainer"], .main, .stApp {
+    background-color: #0E1117 !important;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+
+/* Ocultar elementos de la interfaz de Streamlit */
+[data-testid="stHeader"], header, [data-testid="stToolbar"] {
+    display: none !important;
+    height: 0px !important;
+}
+
+/* Ajuste de margen superior para ganar espacio */
 .stApp { margin-top: -90px !important; }
+
 .main .block-container {
     padding-top: 0px !important;
     padding-bottom: 0px !important;
@@ -28,25 +44,22 @@ st.markdown("""<style>
     padding-right: 1rem !important;
     max-width: 100%;
 }
-html, body, .main { 
-    font-family: 'Roboto', sans-serif; 
-    overflow: hidden; 
-    background-color: #0E1117;
-}
+
 .header-container {
     display: flex; 
     justify-content: space-between; 
     align-items: center;
     padding: 10px 5px;
-    background-color: #0E1117; 
+    background-color: #0E1117 !important; 
     border-bottom: 2px solid #444;
     height: 8vh;
     margin-bottom: 10px;
 }
-.stHorizontalBlock{ margin:10px 0px; }
+
 .title-main { font-size: 1.4rem; font-weight: bold; margin: 0; color: #2b5dda; }
 .subtitle-sub { font-size: 0.8rem; color: #ffffff; margin: 0; }
 .update-text { font-size: 0.7rem; color: #FFBB4D; text-align: right; line-height: 1.1; }
+
 [data-testid="stVerticalBlock"] { gap: 0rem !important; }
 </style>""", unsafe_allow_html=True)
 
@@ -60,7 +73,6 @@ ahora = datetime.now().strftime("%d/%m/%Y %I:%M %p")
 logo_path = Path("assets/logo.png")
 logo_html = f'<img src="data:image/png;base64,{get_base64(logo_path)}" style="height:5vh;">' if logo_path.exists() else ''
 
-# ENCABEZADO: Se eliminan espacios al inicio del string para evitar que se interprete como código
 header_code = f"""<div class="header-container"><div style="display: flex; align-items: center; gap: 20px;">{logo_html}<div><p class="title-main">Unidad Administrativa Integral de Riesgo</p><p class="subtitle-sub">Indicadores Macroeconómicos BCV.</p></div></div><div class="update-text">Última actualización:<br><b>{ahora}</b></div></div>"""
 
 st.markdown(header_code, unsafe_allow_html=True)
@@ -107,8 +119,7 @@ with col_inf_2:
     try:
         df4 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Base Monetaria', usecols="A,B,C")
         df4['Fecha_DT'] = pd.to_datetime(df4.iloc[:, 0])
-        hoy = datetime.now()
-        df_f4 = df4[(df4['Fecha_DT'].dt.month == hoy.month) & (df4['Fecha_DT'].dt.year == hoy.year)].sort_values('Fecha_DT')
+        df_f4 = df4.tail(5).sort_values('Fecha_DT')
         fechas4 = [d.strftime('%d/%m/%Y') for d in df_f4['Fecha_DT']]
         montos4, var4 = df_f4.iloc[:, 1] / 1000000, df_f4.iloc[:, 2]
         fig4 = go.Figure()
