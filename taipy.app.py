@@ -13,8 +13,8 @@ REFRESH_INT = 600000
 C_FONDO = "#0E1117"
 C_AZUL = "#2b5dda"
 C_NARANJA = "#FFBB4D"
-ALT_SUP = 280
-ALT_INF = 265
+ALT_SUP = 310
+ALT_INF = 330
 
 # ==========================================
 # 2. CONFIGURACIÓN DE PÁGINA
