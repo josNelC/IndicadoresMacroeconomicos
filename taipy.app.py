@@ -116,8 +116,8 @@ col_inf_1, col_inf_2, col_inf_3, col_inf_4 = st.columns([0.2, 0.2, 0.3, 0.3])
 with col_inf_1:
     try:
         df3 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Tasa Overnight Mensual', usecols="A,D").iloc[0:5]
-        fig3 = go.Figure(go.Scatter(x=df3.iloc[:, 0], y=df3.iloc[:, 1], mode='lines+markers+text', text=[f"{val}%" for val in df3.iloc[:, 1]], textposition="top center", cliponaxis=False, line=dict(color=C_NARANJA, width=3, shape='spline'), textfont=dict(size=11, color="white")))
-        fig3.update_layout(title="Tasa Overnight Mensual", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=ALT_INF, margin=dict(l=5, r=5, t=30, b=30), xaxis=dict(tickfont=dict(color="white", size=9)), yaxis=dict(showticklabels=False, gridcolor='#222222'), font=dict(color=C_AZUL))
+        fig3 = go.Figure(go.Scatter(x=df3.iloc[:, 0], y=df3.iloc[:, 1], mode='lines+markers+text', text=[f"{val}%" for val in df3.iloc[:, 1]], textposition="top center", cliponaxis=False, line=dict(color=C_NARANJA, width=3, shape='spline'), textfont=dict(size=15, color="white")))
+        fig3.update_layout(title="Tasa Overnight Mensual", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=ALT_INF, margin=dict(l=5, r=5, t=30, b=30), xaxis=dict(tickfont=dict(color="white", size=15)), yaxis=dict(showticklabels=False, gridcolor='#222222'), font=dict(color=C_AZUL))
         st.plotly_chart(fig3, use_container_width=True, config={'displayModeBar': False})
     except Exception as e: st.error(f"Error G3: {e}")
 
