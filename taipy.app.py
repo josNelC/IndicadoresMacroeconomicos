@@ -229,25 +229,78 @@ with col_inf_2: #BASE MONETARIA
     except Exception as e: 
         st.error(f"Error G4: {e}") #FIN BASE MONETARIA
 
-with col_inf_3:
+with col_inf_3: #LIQUIDEZ MONETARIA
     try:
+        # 1. CARGA Y FILTRADO DE DATOS
         df5 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Liquidez Monetaria', usecols="A,G,H")
         df5['Fecha_DT'] = pd.to_datetime(df5.iloc[:, 0])
         hoy = datetime.now()
+        
+        # Lógica para mostrar mes actual o anterior si está vacío
         df_f5 = df5[(df5['Fecha_DT'].dt.month == hoy.month) & (df5['Fecha_DT'].dt.year == hoy.year)]
         if df_f5.empty:
             m, a = (hoy.month-1, hoy.year) if hoy.month > 1 else (12, hoy.year-1)
             df_f5 = df5[(df5['Fecha_DT'].dt.month == m) & (df5['Fecha_DT'].dt.year == a)]
+            
         df_f5 = df_f5.sort_values('Fecha_DT')
         fechas5 = [d.strftime('%d/%m/%Y') for d in df_f5['Fecha_DT']]
         montos5, var5 = df_f5.iloc[:, 1] / 1000000, df_f5.iloc[:, 2]
+
+        # 2. INICIALIZACIÓN DEL GRÁFICO
         fig5 = go.Figure()
-        fig5.add_trace(go.Bar(x=fechas5, y=montos5, text=[f"{int(v):,}MM" for v in montos5], textposition='inside', marker_color='#60CCC8', textfont=dict(color="white", size=11)))
+
+        # 3. TRAZA DE BARRAS (Montos)
+        fig5.add_trace(go.Bar(
+            x=fechas5, 
+            y=montos5, 
+            text=[f"{int(v):,}MM" for v in montos5], 
+            textposition='outside', 
+            marker_color='#60CCC8', 
+            textfont=dict(color="white", size=15)
+        ))
+
+        # 4. TRAZA DE LÍNEA (Variación %)
+        # Cálculo de escala para que la línea conviva con las barras
         escala5 = montos5.max() / (var5.abs().max() if var5.abs().max() != 0 else 1)
-        fig5.add_trace(go.Scatter(x=fechas5, y=var5 * escala5 * 0.6, mode='lines+markers+text', text=[f"{v:.2f}%" for v in var5], textposition="bottom center", line=dict(color=C_NARANJA, width=2), marker=dict(size=6, color='white'), textfont=dict(color=C_NARANJA, size=11)))
-        fig5.update_layout(title="Liquidez Monetaria", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=ALT_INF, margin=dict(l=5, r=5, t=30, b=30), xaxis=dict(tickfont=dict(color="white", size=9)), yaxis=dict(showticklabels=False, range=[montos5.min()*-0.2, montos5.max()*1.2]), font=dict(color=C_AZUL), showlegend=False)
-        st.plotly_chart(fig5, use_container_width=True, config={'displayModeBar': False})
-    except Exception as e: st.error(f"Error G5: {e}")
+        
+        fig5.add_trace(go.Scatter(
+            x=fechas5, 
+            y=var5 * escala5 * 0.6, 
+            mode='lines+markers+text', 
+            text=[f"{v:.2f}%" for v in var5], 
+            textposition="bottom center", 
+            line=dict(color=C_NARANJA, width=2), 
+            marker=dict(size=6, color='white'), 
+            textfont=dict(color=C_NARANJA, size=15)
+        ))
+
+        # 5. CONFIGURACIÓN DEL DISEÑO (Layout)
+        fig5.update_layout(
+            title="Liquidez Monetaria", 
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)', 
+            height=ALT_INF, 
+            margin=dict(l=5, r=5, t=30, b=30), 
+            xaxis=dict(
+                tickfont=dict(color="white", size=15)
+            ), 
+            yaxis=dict(
+                showticklabels=False, 
+                range=[montos5.min()*-0.2, montos5.max()*1.2]
+            ), 
+            font=dict(color=C_AZUL), 
+            showlegend=False
+        )
+
+        # 6. RENDERIZADO
+        st.plotly_chart(
+            fig5, 
+            use_container_width=True, 
+            config={'displayModeBar': False}
+        )
+
+    except Exception as e: 
+        st.error(f"Error G5: {e}") #FIN LIQUIDEZ MONETARIA
 
 with col_inf_4:
     try:
