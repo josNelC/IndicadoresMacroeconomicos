@@ -46,8 +46,8 @@ display: flex; justify-content: space-between; align-items: center;
 padding: 15px 5px; background-color: {C_FONDO}; 
 border-bottom: 2px solid #444; height: 8vh; margin-bottom: 30px;
 }}
-.title-main {{ font-size: 1.4rem; font-weight: bold; margin: 0; color: {C_AZUL}; }}
-.subtitle-sub {{ font-size: 0.8rem; color: #ffffff; margin: 0; }}
+.title-main {{ font-size: 2rem; font-weight: bold; margin: 0; color: {C_AZUL}; }}
+.subtitle-sub {{ font-size: 1.2rem; color: #ffffff; margin: 0; }}
 .update-text {{ font-size: 1rem; color: {C_NARANJA}; text-align: right; line-height: 1.1; }}
 [data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
 </style>
