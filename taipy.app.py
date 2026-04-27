@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 REFRESH_INT = 600000 
 C_FONDO = "#0E1117"
 C_AZUL = "#2b5dda"
+C_TITULO = "#87CEEB"
 C_NARANJA = "#FFDEAD"
 C_BLANCO = "#FFFFFF"
 ALT_SUP = 320
@@ -42,12 +43,16 @@ color: white;
 .header-container {{
 display: flex; justify-content: space-between; align-items: center;
 padding: 15px 5px; background-color: {C_FONDO}; 
-border-bottom: 2px solid #444; height: 8vh; margin-bottom: 30px;
+border-bottom: 2px solid #444; height: auto; margin-bottom: 30px;
 }}
-.title-main {{ font-size: 2rem; font-weight: bold; margin: 0; color: {C_AZUL}; }}
-.subtitle-sub {{ font-size: 1.2rem; color: #ffffff; margin: 0; }}
+.title-main {{ font-size: 3.1rem; margin: 0; color: {C_TITULO}; }}
+.subtitle-sub {{ font-size: 2.2rem; color: #ffffff; margin: 0; }}
 .update-text {{ font-size: 1rem; color: {C_NARANJA}; text-align: right; line-height: 1.1; }}
 [data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
+.st-emotion-cache-18kf3ut{{
+margin-top:20px;}}
+.stHorizontalBlock{{
+margin-top:10px;}}
 </style>
 """, unsafe_allow_html=True)
 # ==========================================
@@ -69,7 +74,7 @@ st.markdown(f"""
 <div style="display: flex; align-items: center; gap: 20px;">
 {logo_html}
 <div>
-<p class="title-main">Unidad Administrativa Integral de Riesgo</p>
+<p class="title-main">UNIDAD ADMINISTRATIVA INTEGRAL DE RIESGO</p>
 <p class="subtitle-sub">Indicadores Macroeconómicos BCV.</p>
 </div>
 </div>
@@ -109,8 +114,8 @@ with col_sup_izq: #-------------------------------------------------------------
                 line=dict(width=2, color='#60CCC8')
             ), 
             textfont=dict(
-                size=16, 
-                color="white"
+                size=17, 
+                color="white",
             )
         ))
         # 3. DISEÑO Y ESTÉTICA (Layout)
@@ -158,7 +163,7 @@ with col_sup_der: #-------------------------------------------------------------
             marker_color=C_AZUL, 
             cliponaxis=False, 
             textfont=dict(
-                size=16, 
+                size=17, 
                 color="white"
             )
         ))
@@ -212,7 +217,7 @@ with col_inf_1: #---------------------------------------------------------------
                 shape='spline'  # Esto mantiene la curvatura suave
             ), 
             textfont=dict(
-                size=15, 
+                size=17, 
                 color="white"
             )
         ))
@@ -224,7 +229,7 @@ with col_inf_1: #---------------------------------------------------------------
             height=ALT_INF, 
             margin=dict(l=5, r=5, t=30, b=30), 
             xaxis=dict(
-                tickfont=dict(color="white", size=15) # Fechas legibles
+                tickfont=dict(color="white", size=17) # Fechas legibles
             ), 
             yaxis=dict(
                 showticklabels=False, 
@@ -263,7 +268,7 @@ with col_inf_2: #---------------------------------------------------------------
             text=[f"{v:,.1f}MM" for v in montos4], 
             textposition='outside', 
             marker_color='#2F4F4F', 
-            textfont=dict(color="white", size=15) 
+            textfont=dict(color="white", size=17) 
         ))
 
         # 2. LÍNEA DE VARIACIÓN: Agregué 'spline' para curvatura y subí el texto
@@ -276,7 +281,7 @@ with col_inf_2: #---------------------------------------------------------------
             textposition="top center", # Cambiado a top para mejor visibilidad
             line=dict(color=C_NARANJA, width=3, shape='spline'), # Línea curva
             marker=dict(size=8, color='white'), 
-            textfont=dict(color=C_NARANJA, size=15),
+            textfont=dict(color=C_NARANJA, size=17),
             cliponaxis=False # Evita que el texto se corte en los bordes
         ))
 
@@ -327,7 +332,7 @@ with col_inf_3: #---------------------------------------------------------------
             text=[f"{int(v):,}MM" for v in montos5], 
             textposition='outside', 
             marker_color='#483D8B', 
-            textfont=dict(color="white", size=15)
+            textfont=dict(color="white", size=17)
         ))
         
         # 4. TRAZA DE LÍNEA DE VARIACIÓN (Curva Spline)
@@ -345,7 +350,7 @@ with col_inf_3: #---------------------------------------------------------------
                 shape='spline' # Línea curva suave
             ), 
             marker=dict(size=8, color='white'), 
-            textfont=dict(color=C_NARANJA, size=15)
+            textfont=dict(color=C_NARANJA, size=17)
         ))
 
         # 5. CONFIGURACIÓN DEL DISEÑO (Mismo alto que G4)
@@ -400,7 +405,7 @@ with col_inf_4: #---------------------------------------------------------------
             text=[f"{int(v):,}MM" for v in montos6], 
             textposition='outside', 
             marker_color='#191970', 
-            textfont=dict(color="white", size=15)
+            textfont=dict(color="white", size=17)
         ))
 
         # 4. TRAZA DE LÍNEA (Variación % Curva)
@@ -418,7 +423,7 @@ with col_inf_4: #---------------------------------------------------------------
                 shape='spline' # Línea con curvatura suave
             ), 
             marker=dict(size=8, color='white'), 
-            textfont=dict(color=C_NARANJA, size=16)
+            textfont=dict(color=C_NARANJA, size=17)
         ))
 
         # 5. CONFIGURACIÓN DEL DISEÑO (Layout consistente)
