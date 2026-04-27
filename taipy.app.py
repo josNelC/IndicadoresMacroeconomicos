@@ -44,7 +44,7 @@ color: white;
 .header-container {{
 display: flex; justify-content: space-between; align-items: center;
 padding: 10px 5px; background-color: {C_FONDO}; 
-border-bottom: 2px solid #444; height: 8vh; margin-bottom: 10px;
+border-bottom: 2px solid #444; height: 8vh; margin-bottom: 20px;
 }}
 .title-main {{ font-size: 1.4rem; font-weight: bold; margin: 0; color: {C_AZUL}; }}
 .subtitle-sub {{ font-size: 0.8rem; color: #ffffff; margin: 0; }}
