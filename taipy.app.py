@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 from streamlit_autorefresh import st_autorefresh
 import base64
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 # =========================================
 # 1. VARIABLES GLOBALES (CASCADA DE EDICIÓN)
 # ==========================================
@@ -58,8 +58,8 @@ def get_base64(bin_file):
         with open(bin_file, 'rb') as f: return base64.b64encode(f.read()).decode()
     except: return ""
 st_autorefresh(interval=REFRESH_INT, key="datarefresh")
-# Preparación de Encabezado
-ahora = datetime.now().strftime("%d/%m/%Y %I:%M %p")
+# Preparación de Encabezado (Ajustado a Caracas UTC-4)
+ahora = (datetime.utcnow() - timedelta(hours=4)).strftime("%d/%m/%Y %I:%M %p")
 logo_path = Path("assets/logo.png")
 logo_b64 = get_base64(logo_path)
 logo_html = f'<img src="data:image/png;base64,{logo_b64}" style="height:5vh;">' if logo_b64 else ''
@@ -115,7 +115,7 @@ with col_sup_izq: #-------------------------------------------------------------
         ))
         # 3. DISEÑO Y ESTÉTICA (Layout)
         fig1.update_layout(
-            title="Tasa Overnight Diaria", 
+            title=dict(text="Tasa Overnight Diaria", font=dict(color="white")), 
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_SUP, 
@@ -139,7 +139,7 @@ with col_sup_izq: #-------------------------------------------------------------
     except Exception as e: 
         st.error(f"Error G1: {e}")
         
-with col_sup_der: #----------------------------------------------------------------------------------------------------------- RESERVAS EXCEDENTARIAS
+with col_sup_der: #------------------------------------------------------------------------- RESERVAS EXCEDENTARIAS
     try:
         # 1. CARGA Y PROCESAMIENTO DE DATOS
         df2 = pd.read_excel('Datos_Macroeconomicos.xlsx', 
@@ -164,7 +164,7 @@ with col_sup_der: #-------------------------------------------------------------
         ))
         # 3. DISEÑO Y ESTÉTICA (Layout)
         fig2.update_layout(
-            title="Reservas Bancarias Excedentarias", 
+            title=dict(text="Reservas Bancarias Excedentarias", font=dict(color="white")), 
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_SUP, 
@@ -192,7 +192,7 @@ with col_sup_der: #-------------------------------------------------------------
 # ==========================================
 col_inf_1, col_inf_2, col_inf_3, col_inf_4 = st.columns([0.2, 0.2, 0.3, 0.3])
 
-with col_inf_1: #-----------------------------------------------------------------------------------------TASA OVERNIGHT MENSUAL
+with col_inf_1: #------------------------------------------------------------------------------------TASA OVERNIGHT MENSUAL
     try:
         # 1. EXTRACCIÓN Y LIMPIEZA DE DATOS
         df3 = pd.read_excel('Datos_Macroeconomicos.xlsx', 
@@ -218,7 +218,7 @@ with col_inf_1: #---------------------------------------------------------------
         ))
         # 3. DISEÑO Y ESTÉTICA (Layout)
         fig3.update_layout(
-            title="Tasa Overnight Mensual", 
+            title=dict(text="Tasa Overnight Mensual", font=dict(color="white")), 
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_INF, 
@@ -230,7 +230,7 @@ with col_inf_1: #---------------------------------------------------------------
                 showticklabels=False, 
                 gridcolor='#222222'
             ), 
-            font=dict(color=C_AZUL)
+            font=dict(color='#2F4F4F')
         )
         # 4. RENDERIZADO
         st.plotly_chart(
@@ -245,7 +245,7 @@ with col_inf_2: #---------------------------------------------------------------
     try:
         df4 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Base Monetaria', usecols="A,B,C")
         df4['Fecha_DT'] = pd.to_datetime(df4.iloc[:, 0])
-        hoy = datetime.now()
+        hoy = (datetime.utcnow() - timedelta(hours=4))
         # Filtrado de datos
         df_f4 = df4[(df4['Fecha_DT'].dt.month == hoy.month) & (df4['Fecha_DT'].dt.year == hoy.year)]
         if df_f4.empty:
@@ -262,7 +262,7 @@ with col_inf_2: #---------------------------------------------------------------
             y=montos4, 
             text=[f"{v:,.1f}MM" for v in montos4], 
             textposition='outside', 
-            marker_color='#4D79FF', 
+            marker_color='#2F4F4F', 
             textfont=dict(color="white", size=15) 
         ))
 
@@ -282,7 +282,7 @@ with col_inf_2: #---------------------------------------------------------------
 
         # 3. LAYOUT: Eje X más grande y ajuste de rango Y para que quepa todo
         fig4.update_layout(
-            title="Base Monetaria", 
+            title=dict(text="Base Monetaria", font=dict(color="white")), 
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_INF, 
@@ -306,7 +306,7 @@ with col_inf_3: #---------------------------------------------------------------
         # 1. CARGA Y FILTRADO DE DATOS
         df5 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Liquidez Monetaria', usecols="A,G,H")
         df5['Fecha_DT'] = pd.to_datetime(df5.iloc[:, 0])
-        hoy = datetime.now()
+        hoy = (datetime.utcnow() - timedelta(hours=4))
         
         # Lógica de filtrado (Mes actual o anterior)
         df_f5 = df5[(df5['Fecha_DT'].dt.month == hoy.month) & (df5['Fecha_DT'].dt.year == hoy.year)]
@@ -350,7 +350,7 @@ with col_inf_3: #---------------------------------------------------------------
 
         # 5. CONFIGURACIÓN DEL DISEÑO (Mismo alto que G4)
         fig5.update_layout(
-            title="Liquidez Monetaria", 
+            title=dict(text="Liquidez Monetaria", font=dict(color="white")), 
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_INF, # Asegura que el alto sea idéntico al G4
@@ -380,7 +380,7 @@ with col_inf_4: #---------------------------------------------------------------
         # 1. CARGA Y PROCESAMIENTO DE DATOS
         df6 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Resev. Internacionales $', usecols="A,D,E")
         df6['Fecha_DT'] = pd.to_datetime(df6.iloc[:, 0])
-        hoy = datetime.now()
+        hoy = (datetime.utcnow() - timedelta(hours=4))
         # Lógica de filtrado de fechas
 
         df_f6 = df6[(df6['Fecha_DT'].dt.month == hoy.month) & (df6['Fecha_DT'].dt.year == hoy.year)]
@@ -423,7 +423,7 @@ with col_inf_4: #---------------------------------------------------------------
 
         # 5. CONFIGURACIÓN DEL DISEÑO (Layout consistente)
         fig6.update_layout(
-            title="Reservas Internacionales $", 
+            title=dict(text="Reservas Internacionales $", font=dict(color="white")), 
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_INF, 
@@ -447,4 +447,4 @@ with col_inf_4: #---------------------------------------------------------------
         )
 
     except Exception as e: 
-        st.error(f"Error G6: {e}") 
+        st.error(f"Error G6: {e}")
