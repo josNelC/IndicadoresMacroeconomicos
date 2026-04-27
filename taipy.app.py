@@ -236,7 +236,7 @@ with col_inf_3: #---------------------------------------------------------------
         df5['Fecha_DT'] = pd.to_datetime(df5.iloc[:, 0])
         hoy = datetime.now()
         
-        # Lógica para mostrar mes actual o anterior si está vacío
+        # Lógica de filtrado (Mes actual o anterior)
         df_f5 = df5[(df5['Fecha_DT'].dt.month == hoy.month) & (df5['Fecha_DT'].dt.year == hoy.year)]
         if df_f5.empty:
             m, a = (hoy.month-1, hoy.year) if hoy.month > 1 else (12, hoy.year-1)
@@ -249,7 +249,7 @@ with col_inf_3: #---------------------------------------------------------------
         # 2. INICIALIZACIÓN DEL GRÁFICO
         fig5 = go.Figure()
 
-        # 3. TRAZA DE BARRAS (Montos)
+        # 3. TRAZA DE BARRAS (Igualado a tamaño 15 como el G4)
         fig5.add_trace(go.Bar(
             x=fechas5, 
             y=montos5, 
@@ -259,40 +259,39 @@ with col_inf_3: #---------------------------------------------------------------
             textfont=dict(color="white", size=15)
         ))
 
-        # 4. TRAZA DE LÍNEA (Variación %)
-        # Ajuste de escala y posición para que los valores queden dentro
+        # 4. TRAZA DE LÍNEA DE VARIACIÓN (Curva Spline)
         escala5 = montos5.max() / (var5.abs().max() if var5.abs().max() != 0 else 1)
         
         fig5.add_trace(go.Scatter(
             x=fechas5, 
-            y=var5 * escala5 * 0.5, # Factor ajustado para centrar más la línea
+            y=var5 * escala5 * 0.7, # Ajustado igual que G4
             mode='lines+markers+text', 
             text=[f"{v:.2f}%" for v in var5], 
-            textposition="top center", # Posición superior para evitar colisión con base
-            cliponaxis=False, # CRÍTICO: Permite que el texto se vea aunque toque el borde
+            textposition="top center", 
+            cliponaxis=False, 
             line=dict(
                 color=C_NARANJA, 
                 width=3, 
-                shape='spline' # CRÍTICO: Suaviza la línea (curva)
+                shape='spline' # Línea curva suave
             ), 
             marker=dict(size=8, color='white'), 
-            textfont=dict(color=C_NARANJA, size=13)
+            textfont=dict(color=C_NARANJA, size=15)
         ))
 
-        # 5. CONFIGURACIÓN DEL DISEÑO (Layout)
+        # 5. CONFIGURACIÓN DEL DISEÑO (Mismo alto que G4)
         fig5.update_layout(
             title="Liquidez Monetaria", 
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
-            height=ALT_INF, 
-            margin=dict(l=5, r=10, t=35, b=40), # Márgenes ajustados
+            height=ALT_INF, # Asegura que el alto sea idéntico al G4
+            margin=dict(l=5, r=10, t=35, b=40), 
             xaxis=dict(
-                tickfont=dict(color="white", size=15)
+                tickfont=dict(color="white", size=15) # Fechas tamaño 15
             ), 
             yaxis=dict(
                 showticklabels=False, 
-                # Rango ampliado para que la línea y textos "quepan" visualmente
-                range=[montos5.min()*-0.5, montos5.max()*1.5] 
+                gridcolor='#222222',
+                range=[montos5.min()*-0.4, montos5.max()*1.4] # Rango expandido para visibilidad
             ), 
             font=dict(color=C_AZUL), 
             showlegend=False
