@@ -13,8 +13,8 @@ REFRESH_INT = 600000
 C_FONDO = "#0E1117"
 C_AZUL = "#2b5dda"
 C_NARANJA = "#FFBB4D"
-ALT_SUP = 240
-ALT_INF = 205
+ALT_SUP = 260
+ALT_INF = 225
 
 # ==========================================
 # 2. CONFIGURACIÓN DE PÁGINA
@@ -43,8 +43,8 @@ color: white;
 }}
 .header-container {{
 display: flex; justify-content: space-between; align-items: center;
-padding: 10px 5px; background-color: {C_FONDO}; 
-border-bottom: 2px solid #444; height: 8vh; margin-bottom: 20px;
+padding: 15px 5px; background-color: {C_FONDO}; 
+border-bottom: 2px solid #444; height: 8vh; margin-bottom: 30px;
 }}
 .title-main {{ font-size: 1.4rem; font-weight: bold; margin: 0; color: {C_AZUL}; }}
 .subtitle-sub {{ font-size: 0.8rem; color: #ffffff; margin: 0; }}
