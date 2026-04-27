@@ -48,7 +48,7 @@ border-bottom: 2px solid #444; height: 8vh; margin-bottom: 30px;
 }}
 .title-main {{ font-size: 1.4rem; font-weight: bold; margin: 0; color: {C_AZUL}; }}
 .subtitle-sub {{ font-size: 0.8rem; color: #ffffff; margin: 0; }}
-.update-text {{ font-size: 0.7rem; color: {C_NARANJA}; text-align: right; line-height: 1.1; }}
+.update-text {{ font-size: 1rem; color: {C_NARANJA}; text-align: right; line-height: 1.1; }}
 [data-testid="stVerticalBlock"] {{ gap: 0rem !important; }}
 </style>
 """, unsafe_allow_html=True)
@@ -140,7 +140,7 @@ with col_sup_izq: #-------------------------------------------------------------
                 gridcolor='#222222', 
                 tickfont=dict(color="white")
             ), 
-            font=dict(color="White") # Aquí es donde definiste el color del título
+            font=dict(color="#2b5dda") # Aquí es donde definiste el color del título
         )
         
         # 4. RENDERIZADO EN STREAMLIT
