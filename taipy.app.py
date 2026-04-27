@@ -94,7 +94,7 @@ with col_sup_izq:
         df1 = df1[df1.iloc[:, 1] != 0].dropna().tail(7)
         fechas1 = [d.strftime('%d/%m/%Y') for d in pd.to_datetime(df1.iloc[:, 0])]
         fig1 = go.Figure(go.Scatter(x=fechas1, y=df1.iloc[:, 1], mode='lines+markers+text', text=[f"{val}%" for val in df1.iloc[:, 1]], textposition="top center", cliponaxis=False, line=dict(color='#60CCC8', width=4, shape='spline'), marker=dict(size=10, color='#FFFFFF', line=dict(width=2, color='#60CCC8')), textfont=dict(size=16, color="white")))
-        fig1.update_layout(title="Tasa Overnight Diaria", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=ALT_SUP, margin=dict(l=10, r=10, t=30, b=40), xaxis=dict(tickangle=-30, tickfont=dict(color="white", size=15)), yaxis=dict(gridcolor='#222222', tickfont=dict(color="white")), font=dict(color=C_AZUL))
+        fig1.update_layout(title="Tasa Overnight Diaria", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=ALT_SUP, margin=dict(l=10, r=10, t=30, b=40), xaxis=dict(tickangle=-30, tickfont=dict(color="white", size=15)), yaxis=dict(gridcolor='#222222', tickfont=dict(color="white")), font=dict(color="White"))
         st.plotly_chart(fig1, use_container_width=True, config={'displayModeBar': False})
     except Exception as e: st.error(f"Error G1: {e}")
 
