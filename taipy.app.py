@@ -146,7 +146,7 @@ with col_inf_2:
             text=[f"{v:,.1f}MM" for v in montos4], 
             textposition='inside', 
             marker_color='#4D79FF', 
-            textfont=dict(color="white", size=12) 
+            textfont=dict(color="white", size=14) 
         ))
 
         # 2. LÍNEA DE VARIACIÓN: Agregué 'spline' para curvatura y subí el texto
@@ -159,7 +159,7 @@ with col_inf_2:
             textposition="top center", # Cambiado a top para mejor visibilidad
             line=dict(color=C_NARANJA, width=3, shape='spline'), # Línea curva
             marker=dict(size=8, color='white'), 
-            textfont=dict(color=C_NARANJA, size=11),
+            textfont=dict(color=C_NARANJA, size=14),
             cliponaxis=False # Evita que el texto se corte en los bordes
         ))
 
@@ -170,7 +170,7 @@ with col_inf_2:
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_INF, 
             margin=dict(l=5, r=5, t=30, b=40), 
-            xaxis=dict(tickfont=dict(color="white", size=11)), # Fechas más grandes
+            xaxis=dict(tickfont=dict(color="white", size=14)), # Fechas más grandes
             yaxis=dict(
                 showticklabels=False, 
                 gridcolor='#222222',
