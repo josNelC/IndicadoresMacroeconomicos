@@ -126,20 +126,63 @@ with col_inf_2:
         df4 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Base Monetaria', usecols="A,B,C")
         df4['Fecha_DT'] = pd.to_datetime(df4.iloc[:, 0])
         hoy = datetime.now()
+        
+        # Filtrado de datos
         df_f4 = df4[(df4['Fecha_DT'].dt.month == hoy.month) & (df4['Fecha_DT'].dt.year == hoy.year)]
         if df_f4.empty:
             m, a = (hoy.month-1, hoy.year) if hoy.month > 1 else (12, hoy.year-1)
             df_f4 = df4[(df4['Fecha_DT'].dt.month == m) & (df4['Fecha_DT'].dt.year == a)]
+        
         df_f4 = df_f4.sort_values('Fecha_DT')
         fechas4 = [d.strftime('%d/%m/%Y') for d in df_f4['Fecha_DT']]
         montos4, var4 = df_f4.iloc[:, 1] / 1000000, df_f4.iloc[:, 2]
+        
         fig4 = go.Figure()
-        fig4.add_trace(go.Bar(x=fechas4, y=montos4, text=[f"{v:,.1f}MM" for v in montos4], textposition='inside', marker_color='#4D79FF', textfont=dict(color="white", size=10)))
+
+        # 1. BARRAS: Aumenté el tamaño del texto a 12
+        fig4.add_trace(go.Bar(
+            x=fechas4, 
+            y=montos4, 
+            text=[f"{v:,.1f}MM" for v in montos4], 
+            textposition='inside', 
+            marker_color='#4D79FF', 
+            textfont=dict(color="white", size=12) 
+        ))
+
+        # 2. LÍNEA DE VARIACIÓN: Agregué 'spline' para curvatura y subí el texto
         escala4 = montos4.max() / (var4.abs().max() if var4.abs().max() != 0 else 1)
-        fig4.add_trace(go.Scatter(x=fechas4, y=var4 * escala4 * 0.6, mode='lines+markers+text', text=[f"{v:.2f}%" for v in var4], textposition="bottom center", line=dict(color=C_NARANJA, width=2), marker=dict(size=6, color='white'), textfont=dict(color=C_NARANJA, size=10)))
-        fig4.update_layout(title="Base Monetaria", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=ALT_INF, margin=dict(l=5, r=5, t=30, b=30), xaxis=dict(tickfont=dict(color="white", size=9)), yaxis=dict(showticklabels=False, range=[montos4.min()*-0.2, montos4.max()*1.2]), font=dict(color=C_AZUL), showlegend=False)
+        fig4.add_trace(go.Scatter(
+            x=fechas4, 
+            y=var4 * escala4 * 0.7, # Subí un poco la posición para que no choque con la base
+            mode='lines+markers+text', 
+            text=[f"{v:.2f}%" for v in var4], 
+            textposition="top center", # Cambiado a top para mejor visibilidad
+            line=dict(color=C_NARANJA, width=3, shape='spline'), # Línea curva
+            marker=dict(size=8, color='white'), 
+            textfont=dict(color=C_NARANJA, size=11),
+            cliponaxis=False # Evita que el texto se corte en los bordes
+        ))
+
+        # 3. LAYOUT: Eje X más grande y ajuste de rango Y para que quepa todo
+        fig4.update_layout(
+            title="Base Monetaria", 
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)', 
+            height=ALT_INF, 
+            margin=dict(l=5, r=5, t=30, b=40), 
+            xaxis=dict(tickfont=dict(color="white", size=11)), # Fechas más grandes
+            yaxis=dict(
+                showticklabels=False, 
+                gridcolor='#222222',
+                range=[montos4.min()*-0.4, montos4.max()*1.4] # Margen extra arriba y abajo
+            ), 
+            font=dict(color=C_AZUL), 
+            showlegend=False
+        )
+        
         st.plotly_chart(fig4, use_container_width=True, config={'displayModeBar': False})
-    except Exception as e: st.error(f"Error G4: {e}")
+    except Exception as e: 
+        st.error(f"Error G4: {e}")
 
 with col_inf_3:
     try:
