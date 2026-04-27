@@ -113,7 +113,7 @@ with col_sup_der:
 # ==========================================
 col_inf_1, col_inf_2, col_inf_3, col_inf_4 = st.columns([0.2, 0.2, 0.3, 0.3])
 
-with col_inf_1: #TASA OVERNIGHT MENSUAL
+with col_inf_1: #-----------------------------------------------------------------------------------------TASA OVERNIGHT MENSUAL
     try:
         # 1. EXTRACCIÓN Y LIMPIEZA DE DATOS
         df3 = pd.read_excel('Datos_Macroeconomicos.xlsx', 
@@ -166,7 +166,7 @@ with col_inf_1: #TASA OVERNIGHT MENSUAL
     except Exception as e: 
         st.error(f"Error G3: {e}")
 
-with col_inf_2: #BASE MONETARIA
+with col_inf_2: #------------------------------------------------------------------------------------------BASE MONETARIA
     try:
         df4 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Base Monetaria', usecols="A,B,C")
         df4['Fecha_DT'] = pd.to_datetime(df4.iloc[:, 0])
@@ -229,7 +229,7 @@ with col_inf_2: #BASE MONETARIA
     except Exception as e: 
         st.error(f"Error G4: {e}") #FIN BASE MONETARIA
 
-with col_inf_3: #LIQUIDEZ MONETARIA
+with col_inf_3: #--------------------------------------------------------------------------------------------------LIQUIDEZ MONETARIA
     try:
         # 1. CARGA Y FILTRADO DE DATOS
         df5 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Liquidez Monetaria', usecols="A,G,H")
@@ -260,18 +260,23 @@ with col_inf_3: #LIQUIDEZ MONETARIA
         ))
 
         # 4. TRAZA DE LÍNEA (Variación %)
-        # Cálculo de escala para que la línea conviva con las barras
+        # Ajuste de escala y posición para que los valores queden dentro
         escala5 = montos5.max() / (var5.abs().max() if var5.abs().max() != 0 else 1)
         
         fig5.add_trace(go.Scatter(
             x=fechas5, 
-            y=var5 * escala5 * 0.6, 
+            y=var5 * escala5 * 0.5, # Factor ajustado para centrar más la línea
             mode='lines+markers+text', 
             text=[f"{v:.2f}%" for v in var5], 
-            textposition="bottom center", 
-            line=dict(color=C_NARANJA, width=2), 
-            marker=dict(size=6, color='white'), 
-            textfont=dict(color=C_NARANJA, size=15)
+            textposition="top center", # Posición superior para evitar colisión con base
+            cliponaxis=False, # CRÍTICO: Permite que el texto se vea aunque toque el borde
+            line=dict(
+                color=C_NARANJA, 
+                width=3, 
+                shape='spline' # CRÍTICO: Suaviza la línea (curva)
+            ), 
+            marker=dict(size=8, color='white'), 
+            textfont=dict(color=C_NARANJA, size=13)
         ))
 
         # 5. CONFIGURACIÓN DEL DISEÑO (Layout)
@@ -280,13 +285,14 @@ with col_inf_3: #LIQUIDEZ MONETARIA
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)', 
             height=ALT_INF, 
-            margin=dict(l=5, r=5, t=30, b=30), 
+            margin=dict(l=5, r=10, t=35, b=40), # Márgenes ajustados
             xaxis=dict(
                 tickfont=dict(color="white", size=15)
             ), 
             yaxis=dict(
                 showticklabels=False, 
-                range=[montos5.min()*-0.2, montos5.max()*1.2]
+                # Rango ampliado para que la línea y textos "quepan" visualmente
+                range=[montos5.min()*-0.5, montos5.max()*1.5] 
             ), 
             font=dict(color=C_AZUL), 
             showlegend=False
@@ -302,7 +308,7 @@ with col_inf_3: #LIQUIDEZ MONETARIA
     except Exception as e: 
         st.error(f"Error G5: {e}") #FIN LIQUIDEZ MONETARIA
 
-with col_inf_4:
+with col_inf_4: #-------------------------------------------------------------------------------------RESERVAS INTERNACIONALES EN DOLARES $
     try:
         df6 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Resev. Internacionales $', usecols="A,D,E")
         df6['Fecha_DT'] = pd.to_datetime(df6.iloc[:, 0])
