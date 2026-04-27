@@ -13,8 +13,8 @@ REFRESH_INT = 600000
 C_FONDO = "#0E1117"
 C_AZUL = "#2b5dda"
 C_NARANJA = "#FFBB4D"
-ALT_SUP = 260
-ALT_INF = 225
+ALT_SUP = 280
+ALT_INF = 265
 
 # ==========================================
 # 2. CONFIGURACIÓN DE PÁGINA
@@ -353,7 +353,7 @@ with col_inf_4: #---------------------------------------------------------------
                 shape='spline' # Línea con curvatura suave
             ), 
             marker=dict(size=8, color='white'), 
-            textfont=dict(color=C_NARANJA, size=15)
+            textfont=dict(color=C_NARANJA, size=16)
         ))
 
         # 5. CONFIGURACIÓN DEL DISEÑO (Layout consistente)
@@ -364,7 +364,7 @@ with col_inf_4: #---------------------------------------------------------------
             height=ALT_INF, 
             margin=dict(l=5, r=10, t=35, b=40), 
             xaxis=dict(
-                tickfont=dict(color="white", size=15)
+                tickfont=dict(color="white", size=16)
             ), 
             yaxis=dict(
                 showticklabels=False, 
