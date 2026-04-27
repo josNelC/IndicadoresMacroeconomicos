@@ -309,20 +309,78 @@ with col_inf_3: #---------------------------------------------------------------
 
 with col_inf_4: #-------------------------------------------------------------------------------------RESERVAS INTERNACIONALES EN DOLARES $
     try:
+        # 1. CARGA Y PROCESAMIENTO DE DATOS
         df6 = pd.read_excel('Datos_Macroeconomicos.xlsx', sheet_name='Resev. Internacionales $', usecols="A,D,E")
         df6['Fecha_DT'] = pd.to_datetime(df6.iloc[:, 0])
         hoy = datetime.now()
+        
+        # Lógica de filtrado de fechas
         df_f6 = df6[(df6['Fecha_DT'].dt.month == hoy.month) & (df6['Fecha_DT'].dt.year == hoy.year)]
         if df_f6.empty:
             m, a = (hoy.month-1, hoy.year) if hoy.month > 1 else (12, hoy.year-1)
             df_f6 = df6[(df6['Fecha_DT'].dt.month == m) & (df6['Fecha_DT'].dt.year == a)]
+            
         df_f6 = df_f6.sort_values('Fecha_DT')
         fechas6 = [d.strftime('%d/%m/%Y') for d in df_f6['Fecha_DT']]
         montos6, var6 = df_f6.iloc[:, 1], df_f6.iloc[:, 2]
+
+        # 2. INICIALIZACIÓN DEL GRÁFICO
         fig6 = go.Figure()
-        fig6.add_trace(go.Bar(x=fechas6, y=montos6, text=[f"{int(v):,}MM" for v in montos6], textposition='inside', marker_color='#9E7BFF', textfont=dict(color="white", size=11)))
+
+        # 3. TRAZA DE BARRAS (Montos en MM)
+        fig6.add_trace(go.Bar(
+            x=fechas6, 
+            y=montos6, 
+            text=[f"{int(v):,}MM" for v in montos6], 
+            textposition='outside', 
+            marker_color='#9E7BFF', 
+            textfont=dict(color="white", size=15)
+        ))
+
+        # 4. TRAZA DE LÍNEA (Variación % Curva)
         escala6 = montos6.max() / (var6.abs().max() if var6.abs().max() != 0 else 1)
-        fig6.add_trace(go.Scatter(x=fechas6, y=var6 * escala6 * 0.6, mode='lines+markers+text', text=[f"{v:.2f}%" for v in var6], textposition="bottom center", line=dict(color=C_NARANJA, width=2), marker=dict(size=6, color='white'), textfont=dict(color=C_NARANJA, size=11)))
-        fig6.update_layout(title="Reservas Internacionales $", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=ALT_INF, margin=dict(l=5, r=5, t=30, b=30), xaxis=dict(tickfont=dict(color="white", size=9)), yaxis=dict(showticklabels=False, range=[montos6.min()*-0.2, montos6.max()*1.2]), font=dict(color=C_AZUL), showlegend=False)
-        st.plotly_chart(fig6, use_container_width=True, config={'displayModeBar': False})
-    except Exception as e: st.error(f"Error G6: {e}")
+        
+        fig6.add_trace(go.Scatter(
+            x=fechas6, 
+            y=var6 * escala6 * 0.7, 
+            mode='lines+markers+text', 
+            text=[f"{v:.2f}%" for v in var6], 
+            textposition="top center", 
+            cliponaxis=False, 
+            line=dict(
+                color=C_NARANJA, 
+                width=3, 
+                shape='spline' # Línea con curvatura suave
+            ), 
+            marker=dict(size=8, color='white'), 
+            textfont=dict(color=C_NARANJA, size=15)
+        ))
+
+        # 5. CONFIGURACIÓN DEL DISEÑO (Layout consistente)
+        fig6.update_layout(
+            title="Reservas Internacionales $", 
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)', 
+            height=ALT_INF, 
+            margin=dict(l=5, r=10, t=35, b=40), 
+            xaxis=dict(
+                tickfont=dict(color="white", size=15)
+            ), 
+            yaxis=dict(
+                showticklabels=False, 
+                gridcolor='#222222',
+                range=[montos6.min()*-0.4, montos6.max()*1.4]
+            ), 
+            font=dict(color=C_AZUL), 
+            showlegend=False
+        )
+
+        # 6. RENDERIZADO
+        st.plotly_chart(
+            fig6, 
+            use_container_width=True, 
+            config={'displayModeBar': False}
+        )
+
+    except Exception as e: 
+        st.error(f"Error G6: {e}")
